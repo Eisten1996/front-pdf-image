@@ -1,0 +1,9 @@
+<div class="img-container">
+  <img
+    #image
+    [src]="_DomSanitizer.bypassSecurityTrustUrl(imageSource)"
+    crossorigin
+  />
+</div>
+<img [src]="imageDestination" class="img-preview" />
+<p class="box-text">{{ imageDestination }}</p>
