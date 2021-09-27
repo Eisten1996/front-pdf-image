@@ -1,7 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Row } from 'src/app/models/row.model';
 import { PdfService } from 'src/app/services/pdf.service';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
 @Component({
   selector: 'app-pdf',
@@ -9,7 +8,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
   styleUrls: ['./pdf.component.css'],
 })
 export class PdfComponent implements OnInit {
-  imageSource = '';
+  imageSource = 'http://localhost:8080/api/output/img-1.jpg';
   pdfSrc = '';
   totalPages: number;
   counter = Array;
@@ -17,13 +16,9 @@ export class PdfComponent implements OnInit {
   pages: string = '';
   reader = new FileReader();
   pdf: File;
-  isImagen:Boolean;
+  isImagen: Boolean;
 
-  constructor(
-    private pdfService: PdfService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+  constructor(private pdfService: PdfService) {}
 
   afterLoadComplete(pdfData: any) {
     this.totalPages = pdfData.numPages;
@@ -47,9 +42,7 @@ export class PdfComponent implements OnInit {
       alert(this.pages);
       this.pdfService.pdfToBack(this.pdf, this.pages).subscribe(
         (data) => {
-          // console.log(data);
-          // this.router.navigate(['/imageCropper']);
-          this.getImagen();
+          this.isImagen = true;
         },
         (error) => {
           console.log(error);
@@ -67,30 +60,6 @@ export class PdfComponent implements OnInit {
     });
     this.pdf = event.target.files.item(0);
     this.reader.readAsDataURL(event.target.files[0]);
-  }
-
-  getImagen() {
-    this.pdfService.getImage().subscribe(async (response) => {
-      // console.log(response);
-      await this.createImageFromBlob(response);
-      this.isImagen = true;
-    });
-  }
-
-  async createImageFromBlob(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener(
-      'load',
-      () => {
-        this.imageSource = reader.result.toString();
-        // console.log(reader.result.toString());
-      },
-      false
-    );
-
-    if (image) {
-      await reader.readAsDataURL(image);
-    }
   }
 
   ngOnInit(): void {

@@ -1,7 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import Cropper from 'cropperjs';
-import { PdfService } from 'src/app/services/pdf.service';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-image-cropper',
@@ -18,10 +16,7 @@ export class ImageCropperComponent implements OnInit {
   public imageDestination: string;
   private cropper: Cropper;
 
-  public constructor(
-    private pdfService: PdfService,
-    private _DomSanitizer: DomSanitizer
-  ) {
+  public constructor() {
     this.imageDestination = '';
   }
 
@@ -37,25 +32,5 @@ export class ImageCropperComponent implements OnInit {
     });
   }
 
-  async createImageFromBlob(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener(
-      'load',
-      () => {
-        this.imageSource = reader.result.toString();
-        // console.log(reader.result.toString());
-      },
-      false
-    );
-
-    if (image) {
-      await reader.readAsDataURL(image);
-    }
-  }
-  public ngOnInit() {
-    // this.pdfService.getImage().subscribe(async (response) => {
-    //   // console.log(response);
-    //   await this.createImageFromBlob(response);
-    // });
-  }
+  public ngOnInit() {}
 }
