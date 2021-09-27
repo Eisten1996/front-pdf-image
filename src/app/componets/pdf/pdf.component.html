@@ -1,5 +1,5 @@
 <input type="file" (change)="onUpload($event)" />
-<div *ngIf="pdfSrc">
+<div *ngIf="pdfSrc && !isImagen">
   <div *ngFor="let loop of counter(totalPages); let i = index">
     <div class="left">
       <h1>{{ i + 1 }}</h1>
@@ -30,3 +30,4 @@
 
   <button class="rigth" (click)="submit()" type="submit">Enviar PDF</button>
 </div>
+<app-image-cropper *ngIf="isImagen" src="{{ imageSource }}"></app-image-cropper>

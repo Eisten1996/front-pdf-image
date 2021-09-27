@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Row } from 'src/app/models/row.model';
 import { PdfService } from 'src/app/services/pdf.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -9,6 +9,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
   styleUrls: ['./pdf.component.css'],
 })
 export class PdfComponent implements OnInit {
+  imageSource = '';
   pdfSrc = '';
   totalPages: number;
   counter = Array;
@@ -16,6 +17,7 @@ export class PdfComponent implements OnInit {
   pages: string = '';
   reader = new FileReader();
   pdf: File;
+  isImagen:Boolean;
 
   constructor(
     private pdfService: PdfService,
@@ -45,8 +47,9 @@ export class PdfComponent implements OnInit {
       alert(this.pages);
       this.pdfService.pdfToBack(this.pdf, this.pages).subscribe(
         (data) => {
-          console.log(data);
-          this.router.navigate(['/imageCropper']);
+          // console.log(data);
+          // this.router.navigate(['/imageCropper']);
+          this.getImagen();
         },
         (error) => {
           console.log(error);
@@ -66,5 +69,31 @@ export class PdfComponent implements OnInit {
     this.reader.readAsDataURL(event.target.files[0]);
   }
 
-  ngOnInit(): void {}
+  getImagen() {
+    this.pdfService.getImage().subscribe(async (response) => {
+      // console.log(response);
+      await this.createImageFromBlob(response);
+      this.isImagen = true;
+    });
+  }
+
+  async createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener(
+      'load',
+      () => {
+        this.imageSource = reader.result.toString();
+        // console.log(reader.result.toString());
+      },
+      false
+    );
+
+    if (image) {
+      await reader.readAsDataURL(image);
+    }
+  }
+
+  ngOnInit(): void {
+    this.isImagen = false;
+  }
 }

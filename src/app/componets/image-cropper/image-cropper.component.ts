@@ -37,25 +37,25 @@ export class ImageCropperComponent implements OnInit {
     });
   }
 
-  createImageFromBlob(image: Blob) {
+  async createImageFromBlob(image: Blob) {
     let reader = new FileReader();
     reader.addEventListener(
       'load',
       () => {
         this.imageSource = reader.result.toString();
-        console.log(reader.result.toString());
+        // console.log(reader.result.toString());
       },
       false
     );
 
     if (image) {
-      reader.readAsDataURL(image);
+      await reader.readAsDataURL(image);
     }
   }
   public ngOnInit() {
-    this.pdfService.getImage().subscribe((response) => {
-      // console.log(response);
-      this.createImageFromBlob(response);
-    });
+    // this.pdfService.getImage().subscribe(async (response) => {
+    //   // console.log(response);
+    //   await this.createImageFromBlob(response);
+    // });
   }
 }
